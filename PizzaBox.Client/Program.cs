@@ -11,7 +11,7 @@ namespace PizzaBox.Client
         private static void Main()
         {
             List<string> storeList = new List<string> {"Store 001", "Store 002" }; // Explicit
-            var stores = new List<AStore> { new ChicagoStore(), new NewYorkStores() }; // Datatype Inference
+            var stores = new List<AStore> { new ChicagoStore(), new NewYorkStore() }; // Datatype Inference
 
             for(var x = 0; x < stores.Count; x += 1)
             {
