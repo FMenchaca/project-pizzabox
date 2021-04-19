@@ -1,30 +1,111 @@
-﻿using System.Collections.Generic;
-using System;
+﻿using System;
 using PizzaBox.Domain.Abstracts;
 using PizzaBox.Domain.Models;
-//using sc = System.Console; // Alias
+using PizzaBox.Client.Singletons;
 
 namespace PizzaBox.Client
 {
-    public class Program
+  /// <summary>
+  /// 
+  /// </summary>
+  public class Program
+  {
+    private static readonly PizzaSingleton _pizzaSingleton = PizzaSingleton.Instance;
+    private static readonly StoreSingleton _storeSingleton = StoreSingleton.Instance;
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private static void Main()
     {
-        private static void Main()
-        {
-            List<string> storeList = new List<string> {"Store 001", "Store 002" }; // Explicit
-            var stores = new List<AStore> { new ChicagoStore(), new NewYorkStore() }; // Datatype Inference
-
-            for(var x = 0; x < stores.Count; x += 1)
-            {
-                Console.WriteLine($"{x} - {stores[x]}");
-            }
-
-            Console.WriteLine("Make A Selection");
-
-            string input = Console.ReadLine();
-            int entry = int.Parse(input);
-
-            Console.WriteLine(stores[entry]);
-
-        }
+      Run();
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private static void Run()
+    {
+      var order = new Order();
+
+      Console.WriteLine("Welcome to PizzaBox");
+      PrintStoreList();
+
+      order.Customer = new Customer();
+      order.Store = SelectStore();
+      order.Pizza = SelectPizza();
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private static void PrintOrder(APizza pizza)
+    {
+      Console.WriteLine($"Your order is: {pizza}");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private static void PrintPizzaList()
+    {
+      var index = 0;
+
+      foreach (var item in _pizzaSingleton.Pizzas)
+      {
+        Console.WriteLine($"{++index} - {item}");
+      }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    private static void PrintStoreList()
+    {
+      var index = 0;
+
+      foreach (var item in _storeSingleton.Stores)
+      {
+        Console.WriteLine($"{++index} - {item}");
+      }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private static APizza SelectPizza()
+    {
+      var valid = int.TryParse(Console.ReadLine(), out int input);
+
+      if (!valid)
+      {
+        return null;
+      }
+
+      var pizza = _pizzaSingleton.Pizzas[input - 1];
+
+      PrintOrder(pizza);
+
+      return pizza;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <returns></returns>
+    private static AStore SelectStore()
+    {
+      var valid = int.TryParse(Console.ReadLine(), out int input);
+
+      if (!valid)
+      {
+        return null;
+      }
+
+      PrintPizzaList();
+
+      return _storeSingleton.Stores[input - 1];
+    }
+  }
 }

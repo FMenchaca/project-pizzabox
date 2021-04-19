@@ -1,38 +1,69 @@
-using PizzaBox.Domain.Models;
+using System.Collections.Generic;
+using PizzaBox.Domain.Abstracts;
+using PizzaBox.Domain.Models.Stores;
 using Xunit;
 
 namespace PizzaBox.Testing.Tests
 {
-    public class StoreTests
+  public class StoreTests
+  {
+    public static IEnumerable<object[]> values = new List<object[]>()
     {
-        [Fact]
-        public void Test_ChicagoStore()
-        {
-            //arrange
-            var sut = new ChicagoStore();
+      new object[] { new ChicagoStore() },
+      new object[] { new NewYorkStore() }
+    };
 
-            //act
-            var actual = sut.Name;
-            //sut.Name = "ditnet";
+    /// <summary>
+    /// 
+    /// </summary>
+    [Fact]
+    public void Test_ChicagoStore()
+    {
+      // arrange
+      var sut = new ChicagoStore();
 
-            //assert
-            Assert.True(actual == "ChicagoStore");
-            Assert.True(sut.ToString() == actual);
-        }
+      // act
+      var actual = sut.Name;
 
-        [Fact]
-        public void Test_NewYorkStore()
-        {
-            //arrange
-            var sut = new NewYorkStore();
-
-            //act
-            //var actual = sut.Name;
-            //sut.Name = "ditnet";
-
-            //assert
-            //Assert.True(actual == "NewYorkStore");
-            Assert.True(sut.Name.Equals("NewYorkStore"));
-        }
+      // assert
+      Assert.True(actual == "ChicagoStore");
+      Assert.True(sut.ToString() == actual);
     }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    [Fact]
+    public void Test_NewYorkStore()
+    {
+      var sut = new NewYorkStore();
+
+      Assert.True(sut.Name.Equals("NewYorkStore"));
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="store"></param>
+    [Theory]
+    [MemberData(nameof(values))]
+    public void Test_StoreName(AStore store)
+    {
+      Assert.NotNull(store.Name);
+      Assert.Equal(store.Name, store.ToString());
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="storeName"></param>
+    /// <param name="x"></param>
+    [Theory]
+    [InlineData("ChicagoStore")]
+    [InlineData("NewYorkStore")]
+    public void Test_StoreNameSimple(string storeName)
+    {
+      Assert.NotNull(storeName);
+    }
+  }
 }
